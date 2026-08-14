@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`} style={{ colorScheme: "dark" }}>
-      <body className="h-full overflow-hidden" style={{ background: "#0a0a1a" }}>
+      <body className="h-full overflow-hidden" style={{ background: "#050510" }}>
         {children}
       </body>
     </html>

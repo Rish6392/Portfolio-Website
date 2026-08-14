@@ -1,16 +1,15 @@
 "use client";
 import { useEffect, useRef } from "react";
 
-interface Particle {
+interface WebNode {
   x: number;
   y: number;
-  z: number; // Depth for parallax and size
-  radius: number;
-  color: string;
-  baseOpacity: number;
+  baseX: number;
+  baseY: number;
   vx: number;
   vy: number;
-  pulseSpeed: number;
+  radius: number;
+  color: string;
   pulseOffset: number;
 }
 
@@ -23,16 +22,25 @@ export default function ParticleCanvas() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const PARTICLE_COUNT = 120;
-    let particles: Particle[] = [];
-    let animFrameId: number;
-    let targetMouseX = 0;
-    let targetMouseY = 0;
-    let currentMouseX = 0;
-    let currentMouseY = 0;
+    const isMobile = window.innerWidth < 768;
+    const NODE_COUNT = isMobile ? 28 : 70;
+    const CONNECTION_DIST = isMobile ? 140 : 180;
+    const MOUSE_RADIUS = 200;
+    const MOUSE_FORCE = 0.06;
 
-    // Theme colors: Violet, Cyan, and subtle White
-    const colors = ["139, 92, 246", "6, 182, 212", "226, 232, 240"];
+    let nodes: WebNode[] = [];
+    let animFrameId: number;
+    let mouseX = -9999;
+    let mouseY = -9999;
+
+    // Spider-Man themed colors: reds, dim blues, subtle white
+    const nodeColors = [
+      "220, 38, 38",   // red-600
+      "185, 28, 28",   // red-800
+      "59, 130, 246",  // blue-500
+      "30, 64, 175",   // blue-800
+      "148, 163, 184", // slate-400
+    ];
 
     function resize() {
       if (!canvas) return;
@@ -40,20 +48,20 @@ export default function ParticleCanvas() {
       canvas.height = window.innerHeight;
     }
 
-    function createParticles() {
+    function createNodes() {
       if (!canvas) return;
-      particles = Array.from({ length: PARTICLE_COUNT }, () => {
-        const z = Math.random() * 2 + 0.2; // Depth between 0.2 and 2.2
+      nodes = Array.from({ length: NODE_COUNT }, () => {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
         return {
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          z: z,
-          radius: (Math.random() * 1.5 + 0.5) * z,
-          color: colors[Math.floor(Math.random() * colors.length)],
-          baseOpacity: (Math.random() * 0.3 + 0.1) * (z / 2),
-          vx: (Math.random() - 0.5) * 0.15 * z,
-          vy: (Math.random() - 0.5) * 0.15 * z - 0.1 * z, // Gentle upward drift
-          pulseSpeed: Math.random() * 0.02 + 0.01,
+          x,
+          y,
+          baseX: x,
+          baseY: y,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3,
+          radius: Math.random() * 1.8 + 0.6,
+          color: nodeColors[Math.floor(Math.random() * nodeColors.length)],
           pulseOffset: Math.random() * Math.PI * 2,
         };
       });
@@ -63,62 +71,114 @@ export default function ParticleCanvas() {
       if (!canvas || !ctx) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Smooth mouse interpolation for parallax
-      currentMouseX += (targetMouseX - currentMouseX) * 0.05;
-      currentMouseY += (targetMouseY - currentMouseY) * 0.05;
+      const time = Date.now() * 0.001;
 
-      particles.forEach((p) => {
-        p.x += p.vx;
-        p.y += p.vy;
+      // Update nodes
+      for (const node of nodes) {
+        // Gentle drift
+        node.x += node.vx;
+        node.y += node.vy;
 
-        // Infinite wrapping
-        if (p.x < -50) p.x = canvas.width + 50;
-        if (p.x > canvas.width + 50) p.x = -50;
-        if (p.y < -50) p.y = canvas.height + 50;
-        if (p.y > canvas.height + 50) p.y = -50;
+        // Boundary wrapping with padding
+        if (node.x < -30) node.x = canvas.width + 30;
+        if (node.x > canvas.width + 30) node.x = -30;
+        if (node.y < -30) node.y = canvas.height + 30;
+        if (node.y > canvas.height + 30) node.y = -30;
 
-        // Parallax offset based on mouse and particle depth
-        const offsetX = currentMouseX * p.z * 0.03;
-        const offsetY = currentMouseY * p.z * 0.03;
+        // Mouse attraction (web tension effect)
+        if (!isMobile) {
+          const dx = mouseX - node.x;
+          const dy = mouseY - node.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < MOUSE_RADIUS && dist > 0) {
+            const force = (1 - dist / MOUSE_RADIUS) * MOUSE_FORCE;
+            node.x += dx * force;
+            node.y += dy * force;
+          }
+        }
+      }
 
-        // Calculate sparkling opacity
-        const pulse = Math.sin(Date.now() * p.pulseSpeed * 0.1 + p.pulseOffset);
-        const currentOpacity = Math.max(0, p.baseOpacity + pulse * 0.15);
+      // Draw connections
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < CONNECTION_DIST) {
+            const opacity = (1 - dist / CONNECTION_DIST) * 0.2;
+
+            // Lines near mouse glow brighter red
+            let lineColor = `rgba(220, 38, 38, ${opacity})`;
+            if (!isMobile) {
+              const midX = (nodes[i].x + nodes[j].x) / 2;
+              const midY = (nodes[i].y + nodes[j].y) / 2;
+              const mouseDist = Math.sqrt(
+                (mouseX - midX) ** 2 + (mouseY - midY) ** 2
+              );
+              if (mouseDist < MOUSE_RADIUS) {
+                const glow = (1 - mouseDist / MOUSE_RADIUS);
+                const glowOpacity = opacity + glow * 0.25;
+                lineColor = `rgba(220, 38, 38, ${Math.min(glowOpacity, 0.5)})`;
+              }
+            }
+
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.strokeStyle = lineColor;
+            ctx.lineWidth = 0.4 + (1 - dist / CONNECTION_DIST) * 0.3;
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw nodes
+      for (const node of nodes) {
+        const pulse = Math.sin(time * 1.5 + node.pulseOffset) * 0.3 + 0.7;
+        const nodeOpacity = 0.35 * pulse;
 
         ctx.beginPath();
-        ctx.arc(p.x + offsetX, p.y + offsetY, p.radius, 0, Math.PI * 2);
-        
-        // Add subtle glow
-        ctx.shadowBlur = p.radius * 3;
-        ctx.shadowColor = `rgba(${p.color}, ${currentOpacity})`;
-        ctx.fillStyle = `rgba(${p.color}, ${currentOpacity})`;
-        
+        ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${node.color}, ${nodeOpacity})`;
+
+        // Subtle glow
+        ctx.shadowBlur = node.radius * 4;
+        ctx.shadowColor = `rgba(${node.color}, ${nodeOpacity * 0.5})`;
         ctx.fill();
-        ctx.shadowBlur = 0; // Reset
-      });
+        ctx.shadowBlur = 0;
+      }
 
       animFrameId = requestAnimationFrame(animate);
     }
 
     function handleMouseMove(e: MouseEvent) {
-      // Offset from center
-      targetMouseX = e.clientX - window.innerWidth / 2;
-      targetMouseY = e.clientY - window.innerHeight / 2;
+      if (isMobile) return;
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    }
+
+    function handleMouseLeave() {
+      mouseX = -9999;
+      mouseY = -9999;
     }
 
     resize();
-    createParticles();
+    createNodes();
     animate();
+
     window.addEventListener("resize", () => {
       resize();
-      createParticles(); // Recreate on resize to fill new bounds properly
+      createNodes();
     });
     window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
       cancelAnimationFrame(animFrameId);
       window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, []);
 
@@ -126,7 +186,7 @@ export default function ParticleCanvas() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 z-0 pointer-events-none"
-      style={{ opacity: 0.8 }}
+      style={{ opacity: 0.85 }}
     />
   );
 }

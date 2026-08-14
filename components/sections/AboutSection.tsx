@@ -21,7 +21,7 @@ export default function AboutSection() {
   return (
     <div className="h-full overflow-y-auto px-14 py-8">
       <motion.div {...fadeUp(0.05)} className="mb-6">
-        <span className="text-violet-400 text-xs font-bold uppercase tracking-[4px]">01.</span>
+        <span className="text-red-400 text-xs font-bold uppercase tracking-[4px]">01.</span>
         <h2 className="text-3xl font-black gradient-text inline ml-2">About Me</h2>
       </motion.div>
 
@@ -29,7 +29,7 @@ export default function AboutSection() {
         <motion.div {...fadeUp(0.1)}>
           <Card className="glass rounded-2xl p-6 transition-all duration-300 border-0 bg-transparent shadow-none">
             <CardContent className="p-0">
-              <h3 className="text-violet-300 font-bold text-base mb-3">Who I Am</h3>
+              <h3 className="text-red-300 font-bold text-base mb-3">Who I Am</h3>
               <p className="text-slate-400 text-sm leading-relaxed">{personalInfo.bio}</p>
             </CardContent>
           </Card>
@@ -37,7 +37,7 @@ export default function AboutSection() {
         <motion.div {...fadeUp(0.2)}>
           <Card className="glass rounded-2xl p-6 transition-all duration-300 border-0 bg-transparent shadow-none">
             <CardContent className="p-0">
-              <h3 className="text-cyan-300 font-bold text-base mb-3">What I Do</h3>
+              <h3 className="text-blue-300 font-bold text-base mb-3">What I Do</h3>
               <p className="text-slate-400 text-sm leading-relaxed">{personalInfo.bio2}</p>
             </CardContent>
           </Card>
@@ -60,7 +60,7 @@ export default function AboutSection() {
       <motion.div {...fadeUp(0.4)}>
         <Card className="glass rounded-2xl p-6 transition-all duration-300 border-0 bg-transparent shadow-none">
           <CardContent className="p-0">
-            <h3 className="text-violet-300 font-bold text-sm mb-4 uppercase tracking-wider">Tech Stack</h3>
+            <h3 className="text-red-300 font-bold text-sm mb-4 uppercase tracking-wider">Tech Stack</h3>
             <div className="grid grid-cols-2 gap-4">
               {skillGroups.map((group) => (
                 <div key={group.label}>
@@ -68,8 +68,8 @@ export default function AboutSection() {
                   <div className="flex flex-wrap gap-2">
                     {group.items.map((item) => (
                       <Badge key={item} variant="outline"
-                        className="rounded-lg text-xs font-semibold text-violet-300 border-violet-500/20 px-2.5 py-1"
-                        style={{ background: "rgba(139,92,246,0.08)" }}>
+                        className="rounded-lg text-xs font-semibold text-red-300 border-red-500/20 px-2.5 py-1"
+                        style={{ background: "rgba(220,38,38,0.08)" }}>
                         {item}
                       </Badge>
                     ))}

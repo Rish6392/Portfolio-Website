@@ -57,7 +57,7 @@ export default function HomeSection({ onNavigate }: { onNavigate: (id: SectionId
         <div
           className="absolute inset-0"
           style={{
-            background: "linear-gradient(105deg, #0a0a1a 38%, rgba(10,10,26,0.55) 65%, rgba(10,10,26,0.3) 100%)",
+            background: "linear-gradient(105deg, #050510 38%, rgba(5,5,16,0.55) 65%, rgba(5,5,16,0.3) 100%)",
           }}
         />
       </div>
@@ -150,10 +150,10 @@ export default function HomeSection({ onNavigate }: { onNavigate: (id: SectionId
             transition={{ delay: 0.4 }}
             className="mt-5 flex items-center gap-4"
           >
-            <div className="w-10 h-[2px] bg-gradient-to-r from-violet-500 to-cyan-500 rounded-full" />
+            <div className="w-10 h-[2px] bg-gradient-to-r from-red-600 to-blue-500 rounded-full" />
             <div className="flex items-center gap-1 h-7">
               <span className="text-slate-300 font-medium text-base">{displayText}</span>
-              <span className="text-violet-400 text-lg font-light animate-blink">|</span>
+              <span className="text-red-400 text-lg font-light animate-blink">|</span>
             </div>
           </motion.div>
 
@@ -179,8 +179,8 @@ export default function HomeSection({ onNavigate }: { onNavigate: (id: SectionId
               onClick={() => onNavigate("projects")}
               className="px-8 py-3.5 rounded-2xl text-white font-semibold text-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
               style={{
-                background: "linear-gradient(135deg,#8B5CF6,#06B6D4)",
-                boxShadow: "0 4px 24px rgba(139,92,246,0.35)",
+                background: "linear-gradient(135deg,#DC2626,#1E40AF)",
+                boxShadow: "0 4px 24px rgba(220,38,38,0.3)",
               }}
             >
               View Projects
@@ -189,7 +189,7 @@ export default function HomeSection({ onNavigate }: { onNavigate: (id: SectionId
               href={personalInfo.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-8 py-3.5 rounded-2xl font-semibold text-sm text-violet-300 border border-violet-500/40 transition-all duration-300 hover:bg-violet-500/10 hover:-translate-y-1"
+              className="px-8 py-3.5 rounded-2xl font-semibold text-sm text-red-300 border border-red-500/40 transition-all duration-300 hover:bg-red-500/10 hover:-translate-y-1"
             >
               GitHub →
             </a>
@@ -200,14 +200,14 @@ export default function HomeSection({ onNavigate }: { onNavigate: (id: SectionId
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.8 }}
-            className="mt-8 inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-cyan-500/20"
-            style={{ background: "rgba(6, 182, 212, 0.06)" }}
+            className="mt-8 inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-red-500/20"
+            style={{ background: "rgba(220, 38, 38, 0.06)" }}
           >
             <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500" />
             </span>
-            <span className="text-xs font-semibold text-cyan-300 tracking-wide">Open to Work</span>
+            <span className="text-xs font-semibold text-red-300 tracking-wide">Open to Work</span>
           </motion.div>
         </div>
       </div>
@@ -224,7 +224,7 @@ export default function HomeSection({ onNavigate }: { onNavigate: (id: SectionId
           className="h-12 overflow-hidden flex items-center"
           style={{
             background: "rgba(255,255,255,0.02)",
-            borderTop: "1px solid rgba(139,92,246,0.1)",
+            borderTop: "1px solid rgba(220,38,38,0.08)",
           }}
         >
           <div className="animate-marquee flex gap-10 whitespace-nowrap">

@@ -24,18 +24,18 @@ export default function PortfolioPage() {
   };
 
   return (
-    <div className="relative h-screen overflow-hidden" style={{ background: "#0a0a1a" }}>
-      {/* Particle background */}
+    <div className="relative h-screen overflow-hidden" style={{ background: "#050510" }}>
+      {/* Spider-web background */}
       <ParticleCanvas />
 
-      {/* Background decorative blobs */}
+      {/* Background decorative blobs — red/blue cinematic */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[-10%] right-[10%] w-[400px] h-[400px] rounded-full opacity-[0.06]"
-          style={{ background: "radial-gradient(circle,#8B5CF6,transparent)" }} />
-        <div className="absolute bottom-[-5%] left-[20%] w-[350px] h-[350px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle,#06B6D4,transparent)" }} />
-        <div className="absolute top-[40%] right-[30%] w-[200px] h-[200px] rounded-full opacity-[0.04]"
-          style={{ background: "radial-gradient(circle,#8B5CF6,transparent)" }} />
+        <div className="absolute top-[-10%] right-[10%] w-[400px] h-[400px] rounded-full opacity-[0.05]"
+          style={{ background: "radial-gradient(circle,#DC2626,transparent)" }} />
+        <div className="absolute bottom-[-5%] left-[20%] w-[350px] h-[350px] rounded-full opacity-[0.04]"
+          style={{ background: "radial-gradient(circle,#1E40AF,transparent)" }} />
+        <div className="absolute top-[40%] right-[30%] w-[200px] h-[200px] rounded-full opacity-[0.03]"
+          style={{ background: "radial-gradient(circle,#DC2626,transparent)" }} />
       </div>
 
       {/* Sidebar */}
